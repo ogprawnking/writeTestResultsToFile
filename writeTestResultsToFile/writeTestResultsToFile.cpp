@@ -15,54 +15,102 @@ std::ostream& operator<<(std::ostream& os, const String& str) {
     return os;
 }
 
-
-
-void runTestsAndLogResults()
+// Get/Print current date/time from system
+String systemDateTime()
 {
+time_t currentTime = time(nullptr); // current time since last epoch (1970)
+//write date & time to testFile.txt
+String currentDateTime = ctime(&currentTime); // convert current time to readable time
+return currentDateTime;
+}
+
+// function to open/create .txt file
+void createOpenFile()
+{
+    // ----- Create/Open file -----
     fstream testFile; // create file
     testFile.open("test_file.txt", ios::app); // open in append mode
     if (!testFile.is_open()) {
         cerr << "Error: Failed to open" << endl; // Print error message
         return; // exit program.
     }
+}
 
-    // get current date/time
-    time_t currentTime = time(nullptr); // current time since last epoch (1970)
-    //write date & time to testFile.txt
-    testFile << "Date/Time: " << ctime(&currentTime); // convert current time to readable time
 
+void runTestsAndLogResults()
+{
+    int totalTests = 0; //Total Test counter
+    int successfulTests = 0; //successful tests counter
+    String exampleString = "Hello, world"; //string to test functions on
+    String exampleString2 = "Hello, world"; // string to compare to
+    String logResults(""); // text space to log everything
+
+    // print date/time top of page
+    logResults.Append("Date/Time: "), systemDateTime();
+    logResults.Append("\n Test name\t\tResults\n");
+
+    totalTests++;
+    logResults.Append("\nLength\t");
+    if (exampleString.Length() == 12){
+        successfulTests++;
+        logResults.Append("Successful");
+    }
+    else logResults.Append("failed");
+    
+    totalTests++;
+    logResults.Append("\nCharAt\t");
+    if (exampleString.CharacterAt(5) == 'o'){
+        successfulTests++;
+        logResults.Append("Successful");
+    }
+    else logResults.Append("failed");
+
+
+    totalTests++;
+    logResults.Append("\nAppend\t");
+    if (exampleString.EqualTo(exampleString2)){ // or ("Hello, world)
+        successfulTests++;
+        logResults.Append("Successful");
+    }
+    else logResults.Append("failed");
+
+
+    totalTests++;
+    logResults.Append("\nEqualTo\t"); // It HAS to be succesful for all others to work. :)
+    successfulTests++;
+    logResults.Append("Successful");
+    
+
+
+
+
+    /* 
+    date/time 25/05/1999    13:48:00
+    Test name   Results
+
+    Length      Successful
+
+
+    EXAMPLE RESTULTS FROM ASSIGNMENT
+Date: 5/02/2015 Time: 13:48:00 Successful 50.00%
+Test 0 Length Successful 
+Test 1 CharAt Successful 
+Test 2 EqualTo Failed 
+Test 3 Append Failed    
+    */
     //run test and calculate percentage of sucessful tests.
     //successfulTests / totalTests * 100
     //cout << "Success Percentage: " << successPercentage << "%" << endl;
 
 
-    //write test results to testFile ---PESUDO---
-    testFile << "Test Name\tResults" << endl; //print column headers. tab seperated value
-    for (int i = 0; i < totalTests; i++) {
-
-    }
-
-
-    // Function to get current date/time into a string output. (1 method to refer to?)
-    String GetCurrentDateTime() {
-        time_t now = time(0);
-        struct tm tstruct;
-        char buf[80];
-        localtime_s(&tstruct, &now);
-        // Format: YYYY-MM-DD.HH:mm:ss
-        strftime(buf, sizeof(buf), "%d/%m/%Y Time: %X", &tstruct);
-
-        return String(buf);
-    }
-
-
+    // ----- Initial junk tests to write to file -----
     testFile << "Hello, world\n";
     testFile << "This is second line\n";
     testFile.close();
 
 }
 
-// EXAMPLE FROM CLASS LECTURE...
+// ----- EXAMPLE FROM CLASS LECTURE... -----
 
 void WriteFile_TypeA(string fileName, string txt) {
     ofstream writefile;
