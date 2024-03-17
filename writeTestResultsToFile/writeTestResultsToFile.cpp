@@ -1,11 +1,27 @@
+#define _CRT_SECURE_NO_WARNINGS // so that ctime works instead of ctime_S
 #include <iostream>
 #include <cstring>
 #include "String.h" // my header file
 #include <string>
 #include <fstream> //inp/outp operations for files
 #include <ctime> // access date and time
-
 using namespace std;
+
+
+// Function Prototypes
+String systemDateTime();
+void runTestsAndLogResults();
+
+/*
+    Expected/Wanted result
+    date/time Sun Mar 17 23:07:00 2024
+    Test name   Results
+
+    Length      Successful
+    CharAt      Successful
+    EqualTo     Successful
+    Append      Successful
+*/
 
 //function to allow operator overloading;
 // allows: cout << string;  INSTEAD OF: cout << string.Cstr();
@@ -15,7 +31,14 @@ std::ostream& operator<<(std::ostream& os, const String& str) {
     return os;
 }
 
-// Get/Print current date/time from system
+int main() {
+    
+    runTestsAndLogResults();
+    cout << "Results printed to .txt file\n -- PRESS ANY KEY TO EXIT -- " << endl;
+    system("pause>0");
+}
+
+// Get current date/time from system
 String systemDateTime()
 {
 time_t currentTime = time(nullptr); // current time since last epoch (1970)
@@ -24,8 +47,8 @@ String currentDateTime = ctime(&currentTime); // convert current time to readabl
 return currentDateTime;
 }
 
-// function to open/create .txt file
-void createOpenFile()
+
+void runTestsAndLogResults()
 {
     // ----- Create/Open file -----
     fstream testFile; // create file
@@ -34,19 +57,16 @@ void createOpenFile()
         cerr << "Error: Failed to open" << endl; // Print error message
         return; // exit program.
     }
-}
 
-
-void runTestsAndLogResults()
-{
+    
     int totalTests = 0; //Total Test counter (should be 8 Currently)
     int successfulTests = 0; //successful tests counter
     String exampleString = "Hello, world"; //string to test functions on
     String exampleString2 = "Hello, world"; // string to compare to
     String logResults(""); // text space to log everything
 
-    /
-
+    logResults.Append("\nTestName : Results");
+    
     totalTests++;
     logResults.Append("\nLength\t");
     if (exampleString.Length() == 12){
@@ -57,7 +77,7 @@ void runTestsAndLogResults()
     
     totalTests++;
     logResults.Append("\nCharAt\t");
-    if (exampleString.CharacterAt(5) == 'o'){
+    if (exampleString.CharacterAt(4) == 'o'){
         successfulTests++;
         logResults.Append("Successful");
     }
@@ -65,16 +85,19 @@ void runTestsAndLogResults()
 
 
     totalTests++;
-    logResults.Append("\nEqualTo\t"); // It HAS to be succesful for all others to work. :)
-    successfulTests++;
-    logResults.Append("Successful");
-    
+    logResults.Append("\nEqualTo\t");
+    if (exampleString.EqualTo(exampleString2) == 1) {
+        successfulTests++;
+        logResults.Append("Successful");
+    }
+    else logResults.Append("failed");
+
     totalTests++;
-    String prependString("\nSuccesfull\t");
-    String testName("Prepend");
+    String prependString("\nPrepend\t");
+    String testName("Successful");
     testName.Prepend(prependString);
     logResults.Append(testName);
-    if (testName.EqualTo("Prepend\nSuccessfull\t")) {
+    if (testName.EqualTo("\nPrepend\tSuccessful")) {
         successfulTests++;
     }
     else logResults.Append("failed");
@@ -99,144 +122,53 @@ void runTestsAndLogResults()
     }
     else logResults.Append("failed");
 
-
     //find(string&)
     totalTests++;
+    exampleString = "Hello, world"; // resets any changes i.e. uppercasing etc.
     logResults.Append("\nFind\t");
-    exampleString.Find("Hello");
-    if (exampleString.Find("Hello") == 0) {
+    String stringToFind("world");
+    size_t findPos = exampleString.Find(stringToFind);
+    if (findPos != std::string::npos) {
         successfulTests++;
         logResults.Append("Successful");
     }
     else logResults.Append("failed");
+    cout << findPos << endl;
+
 
     //replace(string& _find, string& _other)
     totalTests++;
     String imposterString("failed >:)");
     String successfulString("Successful");
     logResults.Append("\nReplace\t");
-    if (imposterString.Replace(successfulString) == "Successful") {
+    if (imposterString.Replace(imposterString, successfulString) == "Successful") {
         successfulTests++;
         logResults.Append(imposterString);
+        logResults.Append("\n\n");
     }
-    else logResults.Append("failed");
+    else logResults.Append("failed\n\n");
 
-    
+
     // ----- Date/Time & SuccessPercentage are printed before everything else -----
     // ----- logResults haven't been printed to txt file yet -----
     // print date / time top of page
-    logResults.Append("Date/Time: "), systemDateTime();
-    logResults.Append("\nTest name\tResults\n");
+    String dateTime = systemDateTime();
+    cout << dateTime;
+    testFile << ("TimeStamp: ") << dateTime;
+    
 
     // getting success percentages and printing to file.
     double successPercentage = static_cast<double>(successfulTests) / totalTests * 100;
-    testFile << "Successful: " << successPercentage << "%" << endl;
-    testFile << "Total Tests Ran: " << totalTests << "\n\n";
+    testFile << "Total Tests Ran: " << totalTests << "\n";
+    testFile << "Success Rate: " << successPercentage << "%\n";
     testFile << logResults; // print logResults to .txt
-
+    testFile << "\n\n";
 
 
     testFile.close(); //close the file (MUST)
-    /* 
-    date/time 25/05/1999    13:48:00
-    Test name   Results
-
-    Length      Successful
-
-
-    EXAMPLE RESTULTS FROM ASSIGNMENT
-Date: 5/02/2015 Time: 13:48:00 Successful 50.00%
-Test 0 Length Successful 
-Test 1 CharAt Successful 
-Test 2 EqualTo Failed 
-Test 3 Append Failed    
-    */
-    //run test and calculate percentage of sucessful tests.
-    //successfulTests / totalTests * 100
-    //cout << "Success Percentage: " << successPercentage << "%" << endl;
-
-
-    // ----- Initial junk tests to write to file -----
-    testFile << "Hello, world\n";
-    testFile << "This is second line\n";
-    testFile.close();
+    
 
 }
-
-// ----- EXAMPLE FROM CLASS LECTURE... -----
-
-void WriteFile_TypeA(string fileName, string txt) {
-    ofstream writefile;
-    writefile.open(fileName);
-    writefile << txt;
-    writefile.close(); // MUST
-}
-
-
-void WriteFile_TypeB(string fileName, const char* str) {
-    cout << "msg: " << str << endl;
-
-    // copy string into char* array
-    int size = (int)strlen(str);
-    char* charString = new char[size + 1];
-    memcpy(charString, str, size + 1);
-
-    // find Q character in string
-    for (int i = 0; i < size; i++) {
-        if (charString[i] == 'Q') {
-            //cout << " catch ! " << endl;
-            charString[i] = ' '; // replace with space character
-            ofstream writefile;
-            writefile.open(fileName);
-            writefile << charString;
-            writefile.close();
-        }
-    }
-
-    // find a string in string
-    if (strstr(charString, "SAVE")) {
-        cout << str << " found ! " << endl;
-        ofstream writefile;
-        writefile.open(fileName);
-        writefile << str;
-        writefile.close();
-    }
-
-}
-
-string ReadFile(string fileName) {
-    string line;
-    ifstream readfile(fileName);
-    if (readfile.is_open()) {
-        getline(readfile, line);
-        readfile.close();
-    }
-    return line;
-}
-
-int main() {
-    //WriteFile_TypeA("example.txt", "Homeworld 3");
-    //cout << ReadFile("example.txt") << endl;
-
-    WriteFile_TypeB("example.txt", "SAVE Left 4 Dead players");
-    cout << ReadFile("example.txt") << endl;
-
-    cout << " -- end of code -- " << endl;
-
-
-
-    // How i want to run the function in main.
-    // keep it all as one function instea of seperating into smaller functions?
-    runTestsAndLogResults();
-
-    system("pause>0");
-}
-
-
-
-
-
-
 
 
 
