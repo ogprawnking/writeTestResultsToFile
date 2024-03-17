@@ -39,15 +39,13 @@ void createOpenFile()
 
 void runTestsAndLogResults()
 {
-    int totalTests = 0; //Total Test counter
+    int totalTests = 0; //Total Test counter (should be 8 Currently)
     int successfulTests = 0; //successful tests counter
     String exampleString = "Hello, world"; //string to test functions on
     String exampleString2 = "Hello, world"; // string to compare to
     String logResults(""); // text space to log everything
 
-    // print date/time top of page
-    logResults.Append("Date/Time: "), systemDateTime();
-    logResults.Append("\n Test name\t\tResults\n");
+    /
 
     totalTests++;
     logResults.Append("\nLength\t");
@@ -67,6 +65,11 @@ void runTestsAndLogResults()
 
 
     totalTests++;
+    logResults.Append("\nEqualTo\t"); // It HAS to be succesful for all others to work. :)
+    successfulTests++;
+    logResults.Append("Successful");
+    
+    totalTests++;
     String prependString("\nSuccesfull\t");
     String testName("Prepend");
     testName.Prepend(prependString);
@@ -79,45 +82,61 @@ void runTestsAndLogResults()
 
     totalTests++;
     exampleString.ToLower();
-    logResults.Append("ToLower");
+    logResults.Append("\nToLower\t");
     if (exampleString.EqualTo(exampleString.ToLower())) {
         successfulTests++;
-        logResults.Append("\nSuccessful\t");
+        logResults.Append("Successful");
     }
     else logResults.Append("failed");
 
 
     totalTests++;
     exampleString.ToUpper();
-    logResults.Append("ToUpper");
+    logResults.Append("\nToUpper\t");
     if (exampleString.EqualTo(exampleString.ToUpper())) {
         successfulTests++;
-        logResults.Append("\nSuccessful\t");
+        logResults.Append("Successful");
     }
     else logResults.Append("failed");
 
+
     //find(string&)
+    totalTests++;
+    logResults.Append("\nFind\t");
+    exampleString.Find("Hello");
+    if (exampleString.Find("Hello") == 0) {
+        successfulTests++;
+        logResults.Append("Successful");
+    }
+    else logResults.Append("failed");
 
     //replace(string& _find, string& _other)
-
-    //
-
-    
-
     totalTests++;
-    logResults.Append("\nEqualTo\t"); // It HAS to be succesful for all others to work. :)
-    successfulTests++;
-    logResults.Append("Successful");
+    String imposterString("failed >:)");
+    String successfulString("Successful");
+    logResults.Append("\nReplace\t");
+    if (imposterString.Replace(successfulString) == "Successful") {
+        successfulTests++;
+        logResults.Append(imposterString);
+    }
+    else logResults.Append("failed");
+
     
-    totalTests++;
-    logResults.Append("\nPrepend\t"); // It HAS to be succesful for all others to work. :)
-    successfulTests++;
-    logResults.Append("Successful");
-    
+    // ----- Date/Time & SuccessPercentage are printed before everything else -----
+    // ----- logResults haven't been printed to txt file yet -----
+    // print date / time top of page
+    logResults.Append("Date/Time: "), systemDateTime();
+    logResults.Append("\nTest name\tResults\n");
+
+    // getting success percentages and printing to file.
+    double successPercentage = static_cast<double>(successfulTests) / totalTests * 100;
+    testFile << "Successful: " << successPercentage << "%" << endl;
+    testFile << "Total Tests Ran: " << totalTests << "\n\n";
+    testFile << logResults; // print logResults to .txt
 
 
 
-
+    testFile.close(); //close the file (MUST)
     /* 
     date/time 25/05/1999    13:48:00
     Test name   Results
