@@ -67,16 +67,50 @@ void runTestsAndLogResults()
 
 
     totalTests++;
-    logResults.Append("\nAppend\t");
-    if (exampleString.EqualTo(exampleString2)){ // or ("Hello, world)
+    String prependString("\nSuccesfull\t");
+    String testName("Prepend");
+    testName.Prepend(prependString);
+    logResults.Append(testName);
+    if (testName.EqualTo("Prepend\nSuccessfull\t")) {
         successfulTests++;
-        logResults.Append("Successful");
     }
     else logResults.Append("failed");
 
 
     totalTests++;
+    exampleString.ToLower();
+    logResults.Append("ToLower");
+    if (exampleString.EqualTo(exampleString.ToLower())) {
+        successfulTests++;
+        logResults.Append("\nSuccessful\t");
+    }
+    else logResults.Append("failed");
+
+
+    totalTests++;
+    exampleString.ToUpper();
+    logResults.Append("ToUpper");
+    if (exampleString.EqualTo(exampleString.ToUpper())) {
+        successfulTests++;
+        logResults.Append("\nSuccessful\t");
+    }
+    else logResults.Append("failed");
+
+    //find(string&)
+
+    //replace(string& _find, string& _other)
+
+    //
+
+    
+
+    totalTests++;
     logResults.Append("\nEqualTo\t"); // It HAS to be succesful for all others to work. :)
+    successfulTests++;
+    logResults.Append("Successful");
+    
+    totalTests++;
+    logResults.Append("\nPrepend\t"); // It HAS to be succesful for all others to work. :)
     successfulTests++;
     logResults.Append("Successful");
     
